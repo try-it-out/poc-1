@@ -1,0 +1,17 @@
+name: Lighthouse Audit
+
+on:
+  workflow_dispatch:
+
+jobs:
+    generate_lighthouse_audit:
+      runs-on: ubuntu-latest
+      steps:
+          - name: Audit preview URL with Lighthouse
+            id: lighthouse_audit
+            uses: treosh/lighthouse-ci-action@v3
+            with:
+                urls: |
+                  https://www.rap.ru
+                uploadArtifacts: true
+                temporaryPublicStorage: true
