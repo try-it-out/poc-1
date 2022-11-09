@@ -22,7 +22,7 @@ jobs:
         with:
             github-token: ${{secrets.GITHUB_TOKEN}}
             script: |
-                const result = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary
+                const result = ${{ steps.lighthouse_audit.outputs.manifest }}
                 const links = ${{ steps.lighthouse_audit.outputs.links }}
                 core.info(JSON.stringify(result))
                 core.info(JSON.stringify(links))
