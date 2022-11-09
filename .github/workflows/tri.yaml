@@ -16,3 +16,13 @@ jobs:
               https://www.rap.ru
             uploadArtifacts: true
             temporaryPublicStorage: true
+      - name: Format lighthouse score
+        id: format_lighthouse_score
+        uses: actions/github-script@v3
+        with:
+            github-token: ${{secrets.GITHUB_TOKEN}}
+            script: |
+                const result = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary
+                const links = ${{ steps.lighthouse_audit.outputs.links }}
+                core.info(result)
+                core.info(links)
