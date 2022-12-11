@@ -1,0 +1,56 @@
+name: Build Vue files
+
+on:
+  pull_request:
+    types: [synchronize, opened]
+
+permissions:
+  actions: read
+  checks: none
+  contents: write
+  deployments: none
+  issues: write
+  packages: none
+  pull-requests: write
+  repository-projects: none
+  security-events: none
+  statuses: none
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Detect branch for PR
+        id: vars
+        run: |
+          PR="${{ github.event.pull_request.number }}"
+          PR_INFO=$( curl \
+                   --request GET \
+                   --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+                   --header 'content-type: application/json' \
+                   --url https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/$PR )
+          REF=$(echo "${PR_INFO}" | jq -r .head.ref)
+          BASE=$(echo "${PR_INFO}" | jq -r .head.repo.full_name)
+          STATE=$(echo "${PR_INFO}" | jq -r .state)
+          BASE_SHA=$(echo "${PR_INFO}" | jq -r .base.sha)
+          if [[ $STATE == "closed" ]]
+          then
+            echo "Pull Request already closed."
+            exit 0;
+          fi
+          echo ::set-output name=islocalbranch::$BASE == $GITHUB_REPOSITORY
+          echo ::set-output name=branch::$REF
+          echo ::set-output name=base::$BASE_SHA
+      - name: Check vue changes
+        id: vuecheck
+        run: |
+          echo "${{ steps.vars.outputs.base }}"
+      - uses: actions/checkout@v2
+        with:
+          lfs: false
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'npm'
+      - run: npm install
