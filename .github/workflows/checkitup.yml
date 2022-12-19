@@ -1,0 +1,11 @@
+name: Check Check Yo
+
+on:
+  pull_request_target:
+    types: [closed]
+
+jobs:
+  check-check:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "it works"
