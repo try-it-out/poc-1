@@ -1,8 +1,7 @@
 name: Check Check Yo
 
 on:
-  issue_comment:
-    types: [ created, edited, deleted]
+  issues:
 
 jobs:
   check-check:
