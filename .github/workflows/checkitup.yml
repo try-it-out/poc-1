@@ -1,8 +1,8 @@
 name: Check Check Yo
 
 on:
-  pull_request_target:
-    types: [closed]
+  issue_comment:
+    types: [ created, edited, deleted]
 
 jobs:
   check-check:
